@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>StarkCore AI – Rule-Based Chatbot</title>
+  <style>
+    body { font-family: Arial; margin: 0; }
+    #chatbotIcon {
+      position: fixed; bottom: 20px; right: 20px;
+      width: 60px; height: 60px; cursor: pointer;
+    }
+    #chatWindow {
+      display: none; flex-direction: column;
+      position: fixed; bottom: 90px; right: 20px;
+      width: 300px; max-height: 400px;
+      background: white; border-radius: 10px;
+      border: 1px solid #ccc; box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      z-index: 999;
+    }
+    #chatHeader {
+      background: #222; color: white; padding: 10px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    #chatBody {
+      padding: 10px; flex: 1; overflow-y: auto;
+    }
+    #chatInput {
+      display: flex; border-top: 1px solid #ccc;
+    }
+    #chatInput input {
+      flex: 1; padding: 10px; border: none;
+    }
+    #chatInput button {
+      background: #222; color: white; border: none; padding: 10px;
+      cursor: pointer;
+    }
+    .message { margin: 5px 0; }
+    .user { text-align: right; color: blue; }
+    .bot { text-align: left; color: green; }
+  </style>
+</head>
+<body>
+
+<!-- 💬 Chatbot Logo -->
+<img id="chatbotIcon" src="ChatGPT Image Jun 15, 2025, 08_24_02 PM.png" alt="Chatbot" />
+
+<!-- 💻 Chat Window -->
+<div id="chatWindow">
+  <div id="chatHeader">
+    StarkCore AI
+    <span id="closeChat" style="cursor:pointer;">❌</span>
+  </div>
+  <div id="chatBody"></div>
+  <div id="chatInput">
+    <input type="text" id="userInput" placeholder="Ask me something..." />
+    <button onclick="handleUserInput()">Send</button>
+  </div>
+</div>
+
+<script>
+  // 🧠 Custom Knowledge Base (you can expand this!)
+  const knowledgeBase = [
+    { keywords: ["what is starkcore ai", "starkcore"], answer: "StarkCore AI is a local chatbot built by Ezhar." },
+    { keywords: ["who created", "who made"], answer: "Ezhar developed this chatbot." },
+    { keywords: ["how to use", "how can i use"], answer: "You can use it directly on your website without API." },
+    { keywords: ["hello", "hi"], answer: "Hello! How can I help you today?" },
+    { keywords: ["bye", "goodbye"], answer: "Goodbye! Have a great day!" },
+    { keywords: ["features", "feature", "key features"], answer: "StarkCore AI - Your 24/7 AI Customer Support Partner Instant replies to FAQs and support queries Improves customer retention and satisfaction?." },
+    { keywords: ["contact us", "contact"], answer: "starkcoreai@gamil.com" },
+    { keywords: ["cost", "cost of chatbot", "cost of product"], answer: "Basic Chatbot of Rule-Based Cost 24$ for update your chatbot depends on your data to know more information contact us" },
+    { keywords: ["help", "can u help me", ], answer: "yes how can i help you" },
+
+  ];
+
+  const chatbotIcon = document.getElementById("chatbotIcon");
+  const chatWindow = document.getElementById("chatWindow");
+  const closeChat = document.getElementById("closeChat");
+
+  chatbotIcon.onclick = () => chatWindow.style.display = "flex";
+  closeChat.onclick = () => chatWindow.style.display = "none";
+
+  const input = document.getElementById("userInput");
+
+  // 👇 Send on Enter key
+  input.addEventListener("keypress", function (event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleUserInput();
+    }
+  });
+
+  // 👤 Handle User Message
+  function handleUserInput() {
+    const userText = input.value.trim().toLowerCase();
+    if (!userText) return;
+    addMessage("user", userText);
+    input.value = "";
+
+    // 🧠 Check knowledge base
+    let matched = false;
+    for (const item of knowledgeBase) {
+      for (const keyword of item.keywords) {
+        if (userText.includes(keyword)) {
+          addMessage("bot", item.answer);
+          matched = true;
+          break;
+        }
+      }
+      if (matched) break;
+    }
+
+    if (!matched) {
+      addMessage("bot", "Sorry, I don’t know the answer to that.");
+    }
+  }
+
+  // 🖊️ Add message to chat
+  function addMessage(sender, text) {
+    const chatBody = document.getElementById("chatBody");
+    const msg = document.createElement("div");
+    msg.className = `message ${sender}`;
+    msg.textContent = text;
+    chatBody.appendChild(msg);
+    chatBody.scrollTop = chatBody.scrollHeight;
+  }
+</script>
+
+</body>
+</html>
